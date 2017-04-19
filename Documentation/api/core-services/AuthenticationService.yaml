@@ -1,0 +1,233 @@
+swagger: '2.0'
+info:
+  title: Authentication-Service API
+  description: Authentication service API
+  version: 1.0.0
+host: 'localhost:8888'
+schemes:
+  - http
+basePath: /Eshop
+produces:
+  - application/json
+tags:
+  - name: Product
+    description: Everything about your Products
+  - name: Category
+    description: Categories and operations
+  - name: Authentication
+    description: Operations about user and roles
+paths:  
+  /authentication:
+    get:
+      description: Checks if the given user exists
+      summary: Check if user exists
+      tags:
+        - Authentication
+      parameters:
+        - name: userName
+          in: header
+          description: Username
+          type: string
+          required: true
+        - name: password
+          in: header
+          description: User password
+          type: string
+          format: password
+          required: true
+      responses:
+        '200':
+          description: Result of check
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Add user
+      description: Add new user
+      tags:
+        - Authentication
+      parameters:
+        - name: usernick
+          description: User nickname
+          in: query
+          required: true
+          type: string
+        - name: firstName
+          description: Given name
+          in: query
+          required: false
+          type: string
+        - name: lastName
+          description: Famaly name
+          in: query
+          required: false
+          type: string
+        - name: password
+          description: User password
+          in: query
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Returns newly created User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/authentication/{userId}':
+    get:
+      description: Get user by id
+      tags:
+        - Authentication
+      summary: Get user by id
+      parameters:
+        - name: userId
+          in: path
+          description: User id
+          required: true
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: User by given id
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: Update an existing user in system
+      summary: Update user
+      tags:
+        - Authentication
+      parameters:
+        - name: userId
+          in: path
+          description: User id
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: body
+          description: User Object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Get updated User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Delete user
+      description: Delete user by given id
+      tags:
+        - Authentication
+      parameters:
+        - name: userId
+          in: path
+          description: User id
+          required: true
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: Deletion result
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /authentication/login:
+    put:
+      description: Login user
+      summary: Login
+      tags:
+        - Authentication
+      parameters:
+        - name: usernick
+          description: User nickname
+          in: header
+          required: true
+          type: string
+        - name: userpassword
+          description: User Password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Was login successful
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /authentication/logout:
+    put:
+      description: Logout user
+      summary: Logout
+      tags:
+        - Authentication
+      parameters:
+        - name: userId
+          description: User id
+          in: header
+          required: true
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: Was logout successful
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        $ref: '#/definitions/ElementId'
+      nick:
+        description: User nickname
+        type: string
+      name:
+        description: Given name
+        type: string
+      lastname:
+        description: Famaly name
+        type: string
+      password:
+        description: User password
+        type: string
+        format: password
+  ElementId:
+    type: number
+    format: integer
+    description: Unique identifier representing a specific element
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

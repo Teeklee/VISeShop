@@ -1,0 +1,648 @@
+swagger: '2.0'
+info:
+  title: eStore-API
+  description: eStore-API (WebShop Interface)
+  version: 1.0.0
+host: 'localhost:8888'
+schemes:
+  - http
+basePath: /Eshop
+produces:
+  - application/json
+tags:
+  - name: Product
+    description: Product related operations
+  - name: Category
+    description: Category related operations
+paths:
+  /api/catalog/product:
+    get:
+      summary: Get Products
+      description: Get all products in eShop.
+      tags:
+        - Product
+      parameters:
+        - name: user
+          description: User nickname
+          in: header
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Creates a new product.
+      summary: Add Product
+      tags:
+        - Product
+      parameters:
+        - name: product
+          description: Product to add
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/product'
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Successful creation of new Product
+          schema:
+            $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/api/catalog/product/{id}':
+    get:
+      summary: Get prodtct by id
+      description: Get coresponding product by id.
+      operationId: findProductById
+      tags:
+        - Product
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch.
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: A product with given id.
+          schema:
+            $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Update product
+      description: Update product with given id
+      operationId: updateProductById
+      tags:
+        - Product
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch.
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: The updated product.
+          schema:
+            $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Delete project
+      description: Delete project with given id.
+      operationId: deleteProductById
+      tags:
+        - Product
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch.
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Deletion status
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/catalog/product/search:
+    get:
+      summary: Search items
+      description: Search items by given parameters.
+      tags:
+        - Product
+      parameters:
+        - name: minPrice
+          in: query
+          description: Minimum price.
+          required: false
+          type: number
+          format: double
+        - name: maxPrice
+          in: query
+          description: Maximum price.
+          required: false
+          type: number
+          format: double
+        - name: name
+          in: query
+          required: false
+          type: string
+          description: Name of product
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/catalog/category:
+    get:
+      summary: Returns all categories
+      description: Returns all existing categories
+      tags:
+        - Category
+      parameters:
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Get all categories
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/category'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Create new Category
+      description: Create new Category
+      tags:
+        - Category
+      parameters:
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+        - name: category
+          in: body
+          description: new category
+          required: true
+          schema:
+            $ref: '#/definitions/category'
+      responses:
+        '200':
+          description: The newly created category
+          schema:
+            $ref: '#/definitions/category'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/api/catalog/category/{id}':
+    get:
+      summary: Get category by id
+      description: Get a single category by his id
+      parameters:
+        - name: id
+          in: path
+          description: ID of category to fetch.
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      tags:
+        - Category
+      responses:
+        '200':
+          description: Category with given id.
+          schema:
+            $ref: '#/definitions/category'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Update category by id
+      description: Update the category with the given id.
+      parameters:
+        - name: id
+          in: path
+          description: ID of category to fetch.
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+        - name: category
+          in: body
+          description: new category
+          required: true
+          schema:
+            $ref: '#/definitions/category'
+      tags:
+        - Category
+      responses:
+        '200':
+          description: The updated category.
+          schema:
+            $ref: '#/definitions/category'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Delete category by id
+      description: Delete the category with the given id.
+      parameters:
+        - name: id
+          in: path
+          description: ID of category to fetch.
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      tags:
+        - Category
+      responses:
+        '200':
+          description: Result of deletion.
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/authentication:
+    get:
+      description: Checks if the given user exists
+      summary: Check if user exists
+      tags:
+        - Authentication
+      parameters:
+        - name: userName
+          in: header
+          description: Username
+          type: string
+          required: true
+        - name: password
+          in: header
+          description: User password
+          type: string
+          format: password
+          required: true
+      responses:
+        '200':
+          description: Result of check
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Add user
+      description: Add new user
+      tags:
+        - Authentication
+      parameters:
+        - name: User
+          description: User nickname
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Returns newly created User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/api/authentication/{userId}':
+    get:
+      description: Get user by id
+      tags:
+        - Authentication
+      summary: Get user by id
+      parameters:
+        - name: userId
+          in: path
+          description: User id
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: User by given id
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      description: Update an existing user in system
+      summary: Update user
+      tags:
+        - Authentication
+      parameters:
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+        - name: user
+          in: body
+          description: User Object
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        '200':
+          description: Get updated User
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Delete user
+      description: Delete user by given id
+      tags:
+        - Authentication
+      parameters:
+        - name: userId
+          in: path
+          description: User id (User which shall be deleted)
+          required: true
+          type: number
+          format: integer
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Deletion result
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/authentication/login:
+    put:
+      description: Login user
+      summary: Login
+      tags:
+        - Authentication
+      parameters:
+        - name: usernick
+          description: User nickname
+          in: header
+          required: true
+          type: string
+        - name: userpassword
+          description: User Password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Was login successful
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/authentication/logout:
+    put:
+      description: Logout current user
+      summary: Logout
+      tags:
+        - Authentication
+      parameters:
+        - name: user
+          in: header
+          description: User nickname
+          required: true
+          type: string
+        - name: password
+          description: User password
+          in: header
+          required: true
+          type: string
+          format: password
+      responses:
+        '200':
+          description: Was logout successful
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    
+definitions:
+  product:
+    type: object
+    properties:
+      id:
+        $ref: '#/definitions/ElementId'
+      name:
+        type: string
+        description: Name of product.
+      price:
+        type: number
+        format: double
+        description: Price of product.
+      details:
+        type: string
+        description: Details of Product.
+      categoryId:
+        type: number
+        format: integer
+        description: Id of Category.
+  category:
+    type: object
+    properties:
+      id:
+        $ref: '#/definitions/ElementId'
+      name:
+        type: string
+        description: Name of category.
+  ElementId:
+    type: number
+    format: integer
+    description: Unique identifier representing a specific element
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
+  User:
+    type: object
+    properties:
+      id:
+        $ref: '#/definitions/ElementId'
+      nick:
+        description: User nickname
+        type: string
+      name:
+        description: Given name
+        type: string
+      lastname:
+        description: Famaly name
+        type: string
+      password:
+        description: User password
+        type: string
+        format: password

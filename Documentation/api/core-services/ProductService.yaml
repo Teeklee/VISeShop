@@ -1,0 +1,192 @@
+swagger: '2.0'
+info:
+  title: Product-Service API
+  description: Product service API
+  version: 1.0.0
+host: 'localhost:8888'
+schemes:
+  - http
+basePath: /Eshop
+produces:
+  - application/json
+tags:
+  - name: Product
+    description: Everything about your Products
+  - name: Category
+    description: Categories and operations
+  - name: Authentication
+    description: Operations about user and roles
+paths:
+  /product:
+    get:
+      summary: Get Products
+      description: Get all products in eShop.
+      parameters:
+        - name: categoryId
+          in: query
+          description: Category Id.
+          required: false
+          type: number
+          format: integer
+      tags:
+        - Product
+      responses:
+        '200':
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description: Creates a new product.
+      tags:
+        - Product
+      responses:
+        '200':
+          description: Successful creation of new Product
+          schema:
+            $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/product/{id}':
+    get:
+      summary: Get prodtct by id
+      description: Get coresponding product by id.
+      operationId: findProductById
+      tags:
+        - Product
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch.
+          required: true
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: A product with given id.
+          schema:
+            $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Update product
+      description: Update product with given id
+      operationId: updateProductById
+      tags:
+        - Product
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch.
+          required: true
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: The updated product.
+          schema:
+            $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: Delete project
+      description: Delete project with given id.
+      operationId: deleteProductById
+      tags:
+        - Product
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch.
+          required: true
+          type: number
+          format: integer
+      responses:
+        '200':
+          description: Deletion status
+          schema:
+            type: boolean
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /product/search:
+    get:
+      summary: Search item
+      description: Search items by given parameters.
+      tags:
+        - Product
+      parameters:
+        - name: minPrice
+          in: query
+          description: Minimum price.
+          required: false
+          type: number
+          format: double
+        - name: maxPrice
+          in: query
+          description: Maximum price.
+          required: false
+          type: number
+          format: double
+        - name: name
+          in: query
+          required: false
+          type: string
+          description: Name of product
+      responses:
+        '200':
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/product'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  product:
+    type: object
+    properties:
+      id:
+        $ref: '#/definitions/ElementId'
+      name:
+        type: string
+        description: Name of product.
+      price:
+        type: number
+        format: double
+        description: Price of product.
+      details:
+        type: string
+        description: Details of Product.
+      categoryId:
+        type: number
+        format: integer
+        description: Id of Category.  
+  ElementId:
+    type: number
+    format: integer
+    description: Unique identifier representing a specific element
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
