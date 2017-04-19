@@ -1,0 +1,59 @@
+product:
+  type: object
+  properties:
+    id:
+      $ref: '#/ElementId'
+    name:
+      type: string
+      description: Name of product.
+    price:
+      type: number
+      format: double
+      description: Price of product.
+    details:
+      type: string
+      description: Details of Product.
+    categoryId:
+      type: number
+      format: integer
+      description: Id of Category.
+category:
+  type: object
+  properties:
+    id:
+      $ref: '#/ElementId'
+    name:
+      type: string
+      description: Name of category.
+User:
+  type: object
+  properties:
+    id:
+      $ref: '#/ElementId'
+    nick:
+      description: User nickname
+      type: string
+    name:
+      description: Given name
+      type: string
+    lastname:
+      description: Famaly name
+      type: string
+    password:
+      description: User password
+      type: string
+      format: password
+ElementId:
+  type: number
+  format: integer
+  description: Unique identifier representing a specific element
+Error:
+  type: object
+  properties:
+    code:
+      type: integer
+      format: int32
+    message:
+      type: string
+    fields:
+      type: string
